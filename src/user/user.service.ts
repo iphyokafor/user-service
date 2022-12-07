@@ -2,10 +2,12 @@ import {
   BadGatewayException,
   BadRequestException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { hashPassword } from 'src/utils/functions/password.function';
+import { UpdateUserDto } from './dto/user.dto';
 import { User } from './model/user.model';
 
 @Injectable()
@@ -23,6 +25,42 @@ export class UserService {
       return {
         message: 'User created successfully',
         createUser,
+      };
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  async updateUser(id: string, user: UpdateUserDto) {
+    try {
+      const updateUser = await this.userModel.findByIdAndUpdate(
+        id,
+        { ...user },
+        { new: true },
+      );
+
+      if (!updateUser) {
+        throw new NotFoundException('User not found');
+      }
+
+      return {
+        message: 'Updated succesfully',
+      };
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  async deleteUser(id: string) {
+    try {
+      const deleteUser = await this.userModel.findByIdAndDelete(id);
+
+      if (!deleteUser) {
+        throw new NotFoundException('user not found');
+      }
+
+      return {
+        message: 'User deleted successfully',
       };
     } catch (e) {
       throw new BadRequestException(e.message);
