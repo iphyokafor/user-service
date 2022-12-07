@@ -14,6 +14,7 @@ export const mongooseSchemaConfig: SchemaOptions = {
       delete ret._id;
       delete ret.salt;
       delete ret.updatedAt;
+      delete ret.password;
       return ret;
     },
   },
@@ -24,6 +25,7 @@ export const mongooseSchemaConfig: SchemaOptions = {
       delete ret._id;
       delete ret.salt;
       delete ret.updatedAt;
+      delete ret.password;
       return ret;
     },
   },
